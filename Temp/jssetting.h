@@ -8,11 +8,10 @@
 
 void js_set_sock()
 {
-	SOCKADDR_IN clnt_addr;
 	puts("\n#####\nSet Socket...\n#####\n");
 
-	uSocket = socket(PF_INET, SOCK_DGRAM, 0);
-	if (uSocket == INVALID_SOCKET)
+	hSocket = socket(PF_INET, SOCK_STREAM, 0);
+	if (hSocket == INVALID_SOCKET)
 		error_handling("socket() error");
 
 	memset(&serv_addr, 0, sizeof(serv_addr));
@@ -20,15 +19,10 @@ void js_set_sock()
 	serv_addr.sin_addr.s_addr = inet_addr(G_SERV_IP);
 	serv_addr.sin_port = htons(SERV_PORT);
 
-	/*
-	memset(&clnt_addr, 0, sizeof(clnt_addr));
-	clnt_addr.sin_family = AF_INET;
-	clnt_addr.sin_addr.s_addr = INADDR_ANY;
-	clnt_addr.sin_port = CLIENT_PORT;
+	if (connect(hSocket, (SOCKADDR*)&serv_addr, sizeof(serv_addr)) == SOCKET_ERROR)
+		error_handling("connect() error!");
 
-	if (bind(uSocket, (LPSOCKADDR)&clnt_addr, sizeof(clnt_addr)) == SOCKET_ERROR)
-		error_handling("bind() error");
-		*/
+	puts("\n#####\nConnecting Server!\n#####\n");
 
 	return;
 }
